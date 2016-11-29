@@ -29,9 +29,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.9.4-R0.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>C:/Users/Polaris/Documents/Repositories/Minecraft/Spigot/bukkit/target/bukkit-1.9.4-R0.1-SNAPSHOT-shaded.jar</systemPath>
+            <version>1.11-R0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
