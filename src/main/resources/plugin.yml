@@ -9,4 +9,4 @@ commands:
    testdummy:
      description: Test dummy
      aliases: [test]
-     usage: /<command> <entity name>
+     usage: /<command> <biome name>
