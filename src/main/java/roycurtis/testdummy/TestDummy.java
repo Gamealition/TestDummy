@@ -20,12 +20,14 @@ public class TestDummy extends JavaPlugin
         try
         {
             Biome biome = Biome.valueOf(biomeArg);
+            int   posX  = player.getLocation().getBlockX();
+            int   posZ  = player.getLocation().getBlockZ();
 
-            for (int x = -256; x < 256; x++)
-            for (int z = -256; z < 256; z++)
+            for (int x = posX - 256; x < posX + 256; x++)
+            for (int z = posZ - 256; z < posZ + 256; z++)
                 player.getWorld().setBiome(x, z, biome);
 
-            player.sendMessage("Set biomes from -256,-256 to 256,256 to " + biome);
+            player.sendMessage("Set biomes in 256 block radius around you to " + biome);
         }
         catch (Exception e)
         {
