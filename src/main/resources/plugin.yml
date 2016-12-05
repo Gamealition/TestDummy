@@ -9,4 +9,4 @@ commands:
    testdummy:
      description: Test dummy
      aliases: [test]
-     usage: /<command> generate|get|(set <generation>)
+     usage: /<command> <entity name>
