@@ -1,40 +1,37 @@
 package roycurtis.testdummy;
 
+import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Llama;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class TestDummy extends JavaPlugin
+public class TestDummy extends JavaPlugin implements Listener
 {
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+    public void onEnable()
     {
-        if ( !(sender instanceof Player) ) return false;
-        if (args.length < 1) return false;
+        getServer().getPluginManager().registerEvents(this, this);
+    }
 
-        Player player   = (Player) sender;
-        String biomeArg = args[0];
+    @EventHandler
+    public void onRightClick(PlayerInteractEntityEvent e)
+    {
+        final Entity ent = e.getRightClicked();
 
-        try
-        {
-            Biome biome = Biome.valueOf(biomeArg);
-            int   posX  = player.getLocation().getBlockX();
-            int   posZ  = player.getLocation().getBlockZ();
+        if ( !(ent instanceof Llama) ) return;
 
-            for (int x = posX - 256; x < posX + 256; x++)
-            for (int z = posZ - 256; z < posZ + 256; z++)
-                player.getWorld().setBiome(x, z, biome);
+        final Llama     llama  = (Llama) ent;
+        final ItemStack carpet = new ItemStack(171, 1, (short) 4);
 
-            player.sendMessage("Set biomes in 256 block radius around you to " + biome);
-        }
-        catch (Exception e)
-        {
-            player.sendMessage("Could not set biome to " + biomeArg);
-            e.printStackTrace();
-        }
-
-        return true;
+        llama.getInventory().setDecor(carpet);
+        e.getPlayer().sendMessage("Carpet set");
     }
 }
