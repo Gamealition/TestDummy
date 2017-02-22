@@ -1,20 +1,21 @@
 package roycurtis.testdummy;
 
-import org.bukkit.Material;
-import org.bukkit.block.Biome;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Llama;
-import org.bukkit.entity.Player;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Map;
+
 public class TestDummy extends JavaPlugin implements Listener
 {
+    private static final Gson      gson  = new GsonBuilder().disableHtmlEscaping().create();
+    private static final TypeToken token = new TypeToken< Map<String, Object> >() {};
+
     @Override
     public void onEnable()
     {
@@ -22,16 +23,20 @@ public class TestDummy extends JavaPlugin implements Listener
     }
 
     @EventHandler
-    public void onRightClick(PlayerInteractEntityEvent e)
+    public void onRightClick(PlayerInteractEvent e)
     {
-        final Entity ent = e.getRightClicked();
+        if ( !e.hasItem() )
+            return;
 
-        if ( !(ent instanceof Llama) ) return;
+        ItemStack held = e.getItem();
+        String    data = gson.toJson( held.serialize() );
 
-        final Llama     llama  = (Llama) ent;
-        final ItemStack carpet = new ItemStack(171, 1, (short) 4);
+        Map<String, Object> deserialized = gson.fromJson( data, token.getType() );
+        ItemStack newItem = ItemStack.deserialize(deserialized);
+//        ItemStack newItem = ItemStack.deserialize( held.serialize() );
 
-        llama.getInventory().setDecor(carpet);
-        e.getPlayer().sendMessage("Carpet set");
+        e.setCancelled(true);
+        e.getPlayer().getInventory().addItem(newItem);
+        e.getPlayer().sendMessage("*** " + held.getType() + " (de)serialized and cloned");
     }
 }
